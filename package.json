@@ -1,0 +1,27 @@
+{
+  "name": "admin-dashboard-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type" : "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --experimental-modules --es-module-specifier-resolution=node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishnuv77/admin-dashboard-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishnuv77/admin-dashboard-server/issues"
+  },
+  "homepage": "https://github.com/vishnuv77/admin-dashboard-server#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "nodemon": "^2.0.22"
+  }
+}
