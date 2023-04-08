@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     },
     lastname: {
       type: String,
-      required,
+      required:true,
     },
     username: {
       type: String,
@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      required: true,
+    },
+    status: {
+      type: Boolean,
+    },
+    admin: {
+      type: mongoose.Types.ObjectId,
+      ref: "Admin",
       required: true,
     },
   },
