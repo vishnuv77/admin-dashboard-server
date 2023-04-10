@@ -43,18 +43,17 @@ export const registerUser = async (req, res, next) => {
     //4. using session to add the users into admin's addedUsers property while saving the new user
     const session = await mongoose.startSession();
     const adminUser = await Admin.findById(adminId);
-
+    /*
     session.startTransaction();
     await user.save({ session });
     adminUser.addedUsers.push(user);
     await adminUser.save({ session });
     await session.commitTransaction();
+    */
 
-    /*
     await user.save();
     adminUser.addedUsers.push(user);
     await adminUser.save();
-    */
   } catch (err) {
     console.log(err);
   }
@@ -158,7 +157,80 @@ export const getUserById = async (req, res, next) => {
         .json({ message: "Request faild user not found !" });
     }
 
-    return res.status(200).json({user})
+    return res.status(200).json({ user });
+  } catch (err) {
+    return res.status(400).json({ message: `${err.message}` });
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  const extractedToken = req.headers.authorization?.split(" ")[1];
+  if (!extractedToken) {
+    return res.status(401).json({ message: "Token not found!" });
+  }
+  //console.log(extractedToken);
+  try {
+    const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
+    const adminId = decodedToken.id;
+
+    const isAdmin = await Admin.exists({ _id: adminId });
+
+    if (!isAdmin) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const id = req.params.id;
+    //console.log(id);
+    const user = await User.findByIdAndRemove(id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Request failed unable to delete the user!" });
+    }
+
+    await Admin.updateOne({ addedUsers: id }, { $pull: { addedUsers: id } });
+
+    return res.status(201).json({ message: "Deleted succesfully!" });
+  } catch (err) {
+    return res.status(400).json({ message: `${err.message}` });
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  const extractedToken = req.headers.authorization?.split(" ")[1];
+  if (!extractedToken) {
+    return res.status(401).json({ message: "Token not found" });
+  }
+
+  const { firstname, lastname, username, password } = req.body;
+  try {
+    const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
+    const adminId = decodedToken.id;
+
+    const isAdmin = await Admin.exists({ _id: adminId });
+
+    if (!isAdmin) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const id = req.params.id;
+    console.log(id);
+    const user = await User.findByIdAndUpdate(id, {
+      firstname,
+      lastname,
+      username,
+      password,
+    });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Request failed unable to update the user" });
+    }
+
+    // update the user's details in the Admin's addedUsers property
+   
+
+    return res.status(200).json({ message: "Updated succesfully!" });
   } catch (err) {
     return res.status(400).json({ message: `${err.message}` });
   }
