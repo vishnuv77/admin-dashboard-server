@@ -12,6 +12,7 @@ app.use(cors());
 
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
+//app.use("/subuser")
 
 mongoose
   .connect("mongodb://localhost:27017/mydatabase")
