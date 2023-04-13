@@ -18,3 +18,4 @@ userRouter.delete("/delete/:id", deleteUser);
 userRouter.put("/update/:id",updateUser)
 
 export default userRouter;
+

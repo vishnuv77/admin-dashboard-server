@@ -10,7 +10,7 @@ export const registerSubUser = async (req, res, next) => {
     return res.status(401).json({ message: "Token not found" });
   }
 
-  const { username, password, status } = req.body;
+  const { firstname, lastname, username, password, status } = req.body;
 
   try {
     const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
@@ -23,6 +23,8 @@ export const registerSubUser = async (req, res, next) => {
     }
 
     const subUser = new Subuser({
+      firstname,
+      lastname,
       username,
       password,
       status,
@@ -131,7 +133,7 @@ export const updateSubUser = async (req, res, next) => {
     return res.status(401).json({ message: "Token not found" });
   }
 
-  const { username, password, status } = req.body;
+  const {firstname,lastname, username, password, status } = req.body;
 
   try {
     const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
@@ -150,6 +152,8 @@ export const updateSubUser = async (req, res, next) => {
     const id = req.params.id;
 
     const subUser = await Subuser.findByIdAndUpdate(id, {
+      firstname,
+      lastname,
       username,
       password,
       status,

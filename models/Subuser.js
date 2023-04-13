@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 
-
 const subUserSchema = new mongoose.Schema({
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
+    type: String,
+    required: true,
+  },
 
   username: {
     type: String,
