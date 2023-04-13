@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
     status: {
       type: Boolean,
     },
+    addedSubUsers:[{
+      type:mongoose.Types.ObjectId,
+      ref:"SubUser"
+    }],
     admin: {
       type: mongoose.Types.ObjectId,
       ref: "Admin",

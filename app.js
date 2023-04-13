@@ -4,15 +4,17 @@ import cors from "cors";
 import adminRouter from "./routes/adminRoute";
 import userRouter from "./routes/userRoute";
 import dotenv from "dotenv";
+import subUserRouter from "./routes/subuserRoute";
 
-dotenv.config()
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
-//app.use("/subuser")
+app.use("/subuser", subUserRouter);
+
 
 mongoose
   .connect("mongodb://localhost:27017/mydatabase")

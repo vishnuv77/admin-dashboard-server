@@ -36,7 +36,6 @@ export const registerUser = async (req, res, next) => {
           admin: adminId,
         });
         //4. using session to add the users into admin's addedUsers property while saving the new user
-
         const adminUser = await Admin.findById(adminId);
         /*const session = await mongoose.startSession();
         session.startTransaction();
@@ -199,7 +198,7 @@ export const updateUser = async (req, res, next) => {
     return res.status(401).json({ message: "Token not found" });
   }
 
-  const { firstname, lastname, username, password } = req.body;
+  const { firstname, lastname, username, password, status } = req.body;
   try {
     const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
     const adminId = decodedToken.id;
@@ -217,12 +216,20 @@ export const updateUser = async (req, res, next) => {
       lastname,
       username,
       password,
+      status,
     });
     if (!user) {
       return res
         .status(404)
         .json({ message: "Request failed unable to update the user" });
     }
+
+    await Admin.updateOne(
+      {
+        addedUsers: id,
+      },
+      { $set: { "addedUsers.$": user } }
+    );
 
     // update the user's details in the Admin's addedUsers property
 
@@ -231,4 +238,3 @@ export const updateUser = async (req, res, next) => {
     return res.status(400).json({ message: `${err.message}` });
   }
 };
-   
