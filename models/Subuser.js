@@ -24,7 +24,7 @@ const subUserSchema = new mongoose.Schema({
   mainuser: {
     type: mongoose.Types.ObjectId,
     ref: "User",
-    required: true,
+
   },
 });
 

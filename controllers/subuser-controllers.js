@@ -5,30 +5,15 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/Admin";
 
 export const registerSubUser = async (req, res, next) => {
-  const extractedToken = req.headers.authorization?.split(" ")[1];
-  if (!extractedToken) {
-    return res.status(401).json({ message: "Token not found" });
-  }
-
   const { firstname, lastname, username, password, status } = req.body;
 
   try {
-    const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
-    const userId = decodedToken.id;
-
-    const isMainUser = await User.exists({ _id: userId });
-
-    if (!isMainUser) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const subUser = new Subuser({
       firstname,
       lastname,
       username,
       password,
       status,
-      mainuser: userId,
     });
     const mainUser = await User.findById(userId);
     /*const session = await mongoose.startSession();
@@ -39,8 +24,6 @@ export const registerSubUser = async (req, res, next) => {
         await session.commitTransaction()*/
 
     await subUser.save();
-    mainUser.addedSubUsers.push(subUser);
-    await mainUser.save();
 
     if (!subUser) {
       return res
@@ -55,25 +38,8 @@ export const registerSubUser = async (req, res, next) => {
 };
 
 export const getAllSubUsers = async (req, res, next) => {
-  const extractedToken = req.headers.authorization?.split(" ")[1];
-  if (!extractedToken) {
-    return res.status(404).json({ message: "Token Not Found" });
-  }
 
   try {
-    const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
-    const userId = decodedToken?.id;
-
-    if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const isMainUser = await User.exists({ _id: userId });
-
-    if (!isMainUser) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const subUsers = await Subuser.find();
 
     if (!subUsers || subUsers.length === 0) {
@@ -133,7 +99,7 @@ export const updateSubUser = async (req, res, next) => {
     return res.status(401).json({ message: "Token not found" });
   }
 
-  const {firstname,lastname, username, password, status } = req.body;
+  const { firstname, lastname, username, password, status } = req.body;
 
   try {
     const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
