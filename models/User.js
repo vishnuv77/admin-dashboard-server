@@ -8,9 +8,9 @@ const userSchema = new mongoose.Schema(
     },
     lastname: {
       type: String,
-      required:true,
+      required: true,
     },
-    username: {
+    email: {
       type: String,
       required: true,
     },
@@ -21,16 +21,17 @@ const userSchema = new mongoose.Schema(
     status: {
       type: Boolean,
     },
-    addedSubUsers:[{
-      type:mongoose.Types.ObjectId,
-      ref:"SubUser"
-    }],
+    addedSubUsers: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "SubUser",
+      },
+    ],
     admin: {
       type: mongoose.Types.ObjectId,
       ref: "Admin",
       required: true,
     },
-
   },
   {
     timestamps: true,

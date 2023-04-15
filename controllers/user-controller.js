@@ -21,7 +21,7 @@ export const registerUser = async (req, res, next) => {
     } else {
       adminId = decrypted.id;
       //3.creating user
-      const { firstname, lastname, username, password, status } = req.body;
+      const { firstname, lastname, email, password, status } = req.body;
 
       const hashedPassword = bcrypt.hashSync(password);
 
@@ -30,7 +30,7 @@ export const registerUser = async (req, res, next) => {
         user = new User({
           firstname,
           lastname,
-          username,
+          email,
           password: hashedPassword,
           status,
           admin: adminId,
@@ -61,11 +61,11 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const userLogin = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   if (
-    !username &&
-    username.trim() === "" &&
+    !email &&
+    email.trim() === "" &&
     !password &&
     password.trim() === ""
   ) {
@@ -75,7 +75,7 @@ export const userLogin = async (req, res, next) => {
   let existingUser;
 
   try {
-    existingUser = await User.findOne({ username });
+    existingUser = await User.findOne({ email });
   } catch (err) {
     console.log(err);
   }
@@ -199,7 +199,7 @@ export const updateUser = async (req, res, next) => {
     return res.status(401).json({ message: "Token not found" });
   }
 
-  const { firstname, lastname, username, password, status } = req.body;
+  const { firstname, lastname, email, password, status } = req.body;
   try {
     const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
     const adminId = decodedToken.id;
@@ -215,7 +215,7 @@ export const updateUser = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(id, {
       firstname,
       lastname,
-      username,
+      email,
       password,
       status,
     });

@@ -3,6 +3,7 @@ import Subuser from "../models/Subuser";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import Admin from "../models/Admin";
+import bcrypt from "bcryptjs";
 
 export const registerSubUser = async (req, res, next) => {
   const { firstname, lastname, email, password, status } = req.body;
@@ -100,4 +101,42 @@ export const updateSubUser = async (req, res, next) => {
   } catch (err) {
     return res.status(400).json({ message: `${err.message}` });
   }
+};
+
+
+export const subUserLogin = async (req, res, next) => {
+
+  const { email, password } = req.body;
+
+  if (!email && email.trim() === "" && !password && password.trim() === "") {
+    return res.status(422).json("Invalid inputs");
+  }
+
+  let existingSubUser;
+
+  try {
+    existingSubUser = await Subuser.findOne({ email });
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (!existingSubUser) {
+    return res.status(400).json({ message: "subuser not found!" });
+  }
+
+  
+  console.log(password)
+  console.log(existingSubUser.password);
+
+  if (password !== existingSubUser.password) {
+    return res.status(400).json({ message: "Invalid password!" });
+  }
+
+  const token = jwt.sign({ id: existingSubUser._id }, process.env.SECRET_KEY, {
+    expiresIn: "7d",
+  });
+
+  return res
+    .status(200)
+    .json({ message: "Succesfully logged in !", token, id: existingSubUser._id });
 };
