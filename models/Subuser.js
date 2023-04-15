@@ -10,7 +10,7 @@ const subUserSchema = new mongoose.Schema({
     required: true,
   },
 
-  username: {
+  email: {
     type: String,
     required: true,
   },

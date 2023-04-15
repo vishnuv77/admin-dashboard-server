@@ -5,17 +5,17 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/Admin";
 
 export const registerSubUser = async (req, res, next) => {
-  const { firstname, lastname, username, password, status } = req.body;
+  const { firstname, lastname, email, password, status } = req.body;
 
   try {
     const subUser = new Subuser({
       firstname,
       lastname,
-      username,
+      email,
       password,
       status,
     });
-    const mainUser = await User.findById(userId);
+
     /*const session = await mongoose.startSession();
         session.startTransaction();
         await subUser.save({session})
@@ -74,7 +74,7 @@ export const deleteSubUser = async (req, res, next) => {
 };
 
 export const updateSubUser = async (req, res, next) => {
-  const { firstname, lastname, username, password, status } = req.body;
+  const { firstname, lastname, email, password, status } = req.body;
 
   try {
     const id = req.params.id;
@@ -82,7 +82,7 @@ export const updateSubUser = async (req, res, next) => {
     const subUser = await Subuser.findByIdAndUpdate(id, {
       firstname,
       lastname,
-      username,
+      email,
       password,
       status,
     });
