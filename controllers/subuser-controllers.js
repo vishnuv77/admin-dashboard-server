@@ -145,9 +145,10 @@ export const subUserLogin = async (req, res, next) => {
   if (!existingSubUser) {
     return res.status(400).json({ message: "subuser not found!" });
   }
-
+  /*
   console.log(password);
   console.log(existingSubUser.password);
+  */
 
   if (password !== existingSubUser.password) {
     return res.status(400).json({ message: "Invalid password!" });
@@ -163,3 +164,34 @@ export const subUserLogin = async (req, res, next) => {
     id: existingSubUser._id,
   });
 };
+
+export const getSubUserById = async(req,res,next) =>{
+  const extractedToken = req.headers.authorization?.split(" ")[1];
+  if (!extractedToken) {
+    return res.status(401).json({ message: "Token not found!" });
+  }
+
+  try {
+    const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
+    const adminId = decodedToken.id;
+
+    const isAdmin = await Admin.exists({ _id: adminId });
+    if (!isAdmin) {
+      return res.status(401).json({ message: "Unauthorized!" });
+    }
+
+    const id = req.params.id;
+    const subuser = await Subuser.findById(id);
+
+    if (!subuser) {
+      return res
+        .status(404)
+        .json({ message: "Request faild user not found !" });
+    }
+
+    return res.status(200).json({ subuser });
+  } catch (err) {
+    return res.status(400).json({ message: `${err.message}` });
+  }
+
+}
