@@ -165,21 +165,8 @@ export const subUserLogin = async (req, res, next) => {
   });
 };
 
-export const getSubUserById = async(req,res,next) =>{
-  const extractedToken = req.headers.authorization?.split(" ")[1];
-  if (!extractedToken) {
-    return res.status(401).json({ message: "Token not found!" });
-  }
-
+export const getSubUserById = async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(extractedToken, process.env.SECRET_KEY);
-    const adminId = decodedToken.id;
-
-    const isAdmin = await Admin.exists({ _id: adminId });
-    if (!isAdmin) {
-      return res.status(401).json({ message: "Unauthorized!" });
-    }
-
     const id = req.params.id;
     const subuser = await Subuser.findById(id);
 
@@ -193,5 +180,4 @@ export const getSubUserById = async(req,res,next) =>{
   } catch (err) {
     return res.status(400).json({ message: `${err.message}` });
   }
-
-}
+};
