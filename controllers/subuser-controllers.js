@@ -6,7 +6,16 @@ import Admin from "../models/Admin";
 import bcrypt from "bcryptjs";
 
 export const registerSubUser = async (req, res, next) => {
-  const { firstname, lastname, email, password, status } = req.body;
+  const {
+    firstname,
+    lastname,
+    email,
+    password,
+    status,
+    menuAccess,
+    contractAccess,
+    servicesAccess,
+  } = req.body;
 
   try {
     const subUser = new Subuser({
@@ -15,6 +24,9 @@ export const registerSubUser = async (req, res, next) => {
       email,
       password,
       status,
+      menuAccess,
+      contractAccess,
+      servicesAccess,
     });
 
     /*const session = await mongoose.startSession();
@@ -75,7 +87,16 @@ export const deleteSubUser = async (req, res, next) => {
 };
 
 export const updateSubUser = async (req, res, next) => {
-  const { firstname, lastname, email, password, status } = req.body;
+  const {
+    firstname,
+    lastname,
+    email,
+    password,
+    status,
+    menuAccess,
+    contractAccess,
+    servicesAccess,
+  } = req.body;
 
   try {
     const id = req.params.id;
@@ -86,6 +107,9 @@ export const updateSubUser = async (req, res, next) => {
       email,
       password,
       status,
+      menuAccess,
+      contractAccess,
+      servicesAccess,
     });
     if (!subUser) {
       return res
@@ -103,9 +127,7 @@ export const updateSubUser = async (req, res, next) => {
   }
 };
 
-
 export const subUserLogin = async (req, res, next) => {
-
   const { email, password } = req.body;
 
   if (!email && email.trim() === "" && !password && password.trim() === "") {
@@ -124,8 +146,7 @@ export const subUserLogin = async (req, res, next) => {
     return res.status(400).json({ message: "subuser not found!" });
   }
 
-  
-  console.log(password)
+  console.log(password);
   console.log(existingSubUser.password);
 
   if (password !== existingSubUser.password) {
@@ -136,7 +157,9 @@ export const subUserLogin = async (req, res, next) => {
     expiresIn: "7d",
   });
 
-  return res
-    .status(200)
-    .json({ message: "Succesfully logged in !", token, id: existingSubUser._id });
+  return res.status(200).json({
+    message: "Succesfully logged in !",
+    token,
+    id: existingSubUser._id,
+  });
 };

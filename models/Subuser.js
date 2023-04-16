@@ -21,10 +21,18 @@ const subUserSchema = new mongoose.Schema({
   status: {
     type: Boolean,
   },
+  menuAccess: {
+    type: Boolean,
+  },
+  contractAccess: {
+    type: Boolean,
+  },
+  servicesAccess: {
+    type: Boolean,
+  },
   mainuser: {
     type: mongoose.Types.ObjectId,
     ref: "User",
-
   },
 });
 
